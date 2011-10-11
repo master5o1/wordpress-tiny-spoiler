@@ -1,11 +1,10 @@
 <?php
 /*
 Plugin Name: Tiny Spoiler
-Plugin URI: http://www.tomsdimension.de/wp-plugins/tiny-spoiler
-Description: [spoiler name="top secret"]shows/hides this text[/spoiler]
-Version: 0.2
-Author: Tom Braider
-Author URI: http://www.tomsdimension.de
+Plugin URI: http://wordpress.org/extend/plugins/tiny-spoiler/
+Description: Modified Tony Spoiler to allow bbPress 2.0.
+Version: 999.0.2
+Author: Tom Braider, master5o1
 */
 
 
@@ -15,10 +14,12 @@ Author URI: http://www.tomsdimension.de
 function insert_spoiler_css()
 {
 	echo "<style type='text/css'>
-	.spoiler { border: 1px #000 dashed; }
-	.spoiler legend { padding-right: 5px; background: white;  }
-	.spoiler legend input { width: 30px; }
-	.spoiler div { margin: 0px; overflow: hidden; height: 0; }
+	.spoiler { border: 1px #eee solid; background-color: #f3f3f3; padding: 0; margin: 2px auto;}
+	.spoiler legend { width: 0em; height: 1.70em; padding: 0; margin: -23px -3px; border: none; }
+	.spoiler legend input { width: 7.3em; display: inline-block; margin: -0.1em 1.3em auto -1.6em; padding: 0; background-color: #f5f5f5; border: solid 1px #e5e5e5; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; cursor: pointer; }
+	.spoiler legend input.open,
+	.spoiler legend input:hover { background-color: #f9f9f9; }
+	.spoiler div { line-height: 1.4em; padding: 0; margin: -10px -4px -22px; display: none; overflow: hidden; }
 	</style>\n";
 }
 
@@ -33,19 +34,21 @@ function insert_spoiler_js()
 {
 	echo <<<ENDJS
 	<script type='text/javascript'>
-	function tiny_spoiler( id )
+	function tiny_spoiler( id, elem )
 	{
-		if ( document.getElementById( id ).style.height == 'auto' )
+		if ( document.getElementById( id ).style.display == 'block' )
 		{
-			document.getElementById( id ).style.height = 0;
-			document.getElementById( id ).style.padding = 0;
-			document.getElementById( id + '_button' ).value = '+';
+			document.getElementById( id ).style.display = 'none';
+			document.getElementById( id ).style.padding = '0';
+			elem.value = elem.value.replace('Hide', 'Show');
+			elem.setAttribute('class', '');
 		}
 		else
 		{
-			document.getElementById( id ).style.height = 'auto';
-			document.getElementById( id ).style.padding = '10px';
-			document.getElementById( id + '_button' ).value = '-';
+			document.getElementById( id ).style.display = 'block';
+			document.getElementById( id ).style.padding = '5px 0';
+			elem.value = elem.value.replace('Show', 'Hide');
+			elem.setAttribute('class', 'open');
 		}
 	}
 	</script>
@@ -70,19 +73,37 @@ function replace_spoiler_tag( $content, $name )
 	for ( $i = 0; $i < 10; $i++ )
 		$addition .= $caracteres[rand(0,25)];
 	$id = str_replace(' ', '', $name).$addition;
+	//id="'.$id.'_button" 
 	$s = '<fieldset class="spoiler">
 			<legend>
-				<input type="button" onclick="tiny_spoiler(\''.$id.'\')" id="'.$id.'_button" value="+" />
-				'.$name.'
+				<input type="button" onclick="tiny_spoiler(\''.$id.'\', this)" value="Show Spoiler" />
 			</legend>
-			<div id="'.$id.'">'
-				.$content.'
-			</div>
+			<div id="'.$id.'">'.$content.'</div>
 		</fieldset>';		
 	return $s;
 }
 
+function spoiler_bbpress_shortcode($content) {
+	$shortcode_tags = array( 'spoiler' => 'spoiler_shortcode' );
+	if (empty($shortcode_tags) || !is_array($shortcode_tags))
+		return $content;
+	$tagnames = array_keys($shortcode_tags);
+	$tagregexp = join( '|', array_map('preg_quote', $tagnames) );
+	$pattern = '(.?)\[('.$tagregexp.')\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)';
+	return preg_replace_callback('/'.$pattern.'/s', 'do_shortcode_tag', $content);
+}
 
+add_filter( 'bbp_get_reply_content', 'spoiler_bbpress_shortcode' );
+
+
+function spoiler_add_to_post_toolbar($items) {
+	$items[] = array( 'action' => 'api_item',
+						 'inside_anchor' => '<img src="' . plugins_url( '/spoiler_btn.png', __FILE__ ) . '" title="Spoiler" alt="Spoiler" />',
+						 'data' => "function(stack){insertShortcode(stack, 'spoiler', []);}");
+	return $items;
+}
+
+add_filter( 'bbp_5o1_toolbar_add_items' , 'spoiler_add_to_post_toolbar' );
 
 /**
  * parses parameters
@@ -94,7 +115,7 @@ function replace_spoiler_tag( $content, $name )
 function spoiler_shortcode( $atts, $content )
 {
 	extract(shortcode_atts(array(
-		'name' => 'Spoiler'
+		'name' => 'spoiler'
 	), $atts));
 	return replace_spoiler_tag( $content, $name );
 }
