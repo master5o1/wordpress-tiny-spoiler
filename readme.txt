@@ -1,18 +1,19 @@
-=== Tiny Spoiler ===
-Contributors: Tom Braider
-Donate link: http://www.unicef.org
-Tags: spoiler, secret, post
-Requires at least: 2.5
-Tested up to: 2.7
-Stable tag: 0.2
+=== Tiny Spoiler Fork ===
+Contributors: Jason Schwarzenberger
+Donate link: http://master5o1.com/donate/
+Tags: spoiler, secret, post, bbPress2, bbPress 2.0, bbPress 2, bbPress, post toolbar, toolbar, bbPress Post Toolbar
+Requires at least: 3.2.1
+Tested up to: 3.2.1
+Stable tag: 0.3
 
 [spoiler name="top secret"]shows/hides this text[/spoiler]
 
 == Description ==
 
+This is a fork of Tom Braider's [Tiny Spoiler](http://wordpress.org/extend/plugins/tiny-spoiler/) so that it works with [bbPress 2.0](http://wordpress.org/extend/plugins/bbpress/) and [bbPress Post Toolbar](http://wordpress.org/extend/plugins/bbpress-post-toolbar/).
+
 * shows/hides text in spoiler shortcode
 * name of spoiler area can be given
-* only one little button [+] or [-]
 
 == Installation ==
 
@@ -22,34 +23,18 @@ Stable tag: 0.2
 
 == Frequently Asked Questions ==
 
-= Need Help? Find Bug? =
-
-read and write comments on <a href="http://www.tomsdimension.de/wp-plugins/tiny-spoiler">plugin page</a>
-
-= Who can i change the style? =
-
-You can change the Stylesheet in you own theme style.css.
-'.spoiler' is the outer border/area.
-'.spoiler legend' is the title.
-'.spoiler legend input' is the button.
-'.spoiler div' is the content area.
+No questions yet.
 
 == Screenshots ==
 
 1. closed and open spoiler
 
-== Arbitrary section ==
+== Changelog ==
 
-**Filelist**
+= 0.3 =
+* Forked from Tom Braider's [Tiny Spoiler](http://wordpress.org/extend/plugins/tiny-spoiler/).
 
-* spoiler.php
+== Upgrade Notice ==
 
-**Changelog**
-
-_Version 0.2_
-
-new: several spoiler can have same name
-
-_Version 0.1_
-
-+ first release
+= 0.3 =
+* You should probably stop using Tom's spoiler plugin as to not have conflicts.
