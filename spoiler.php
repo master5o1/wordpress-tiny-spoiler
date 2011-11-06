@@ -2,7 +2,7 @@
 /*
 Plugin Name: Tiny Spoiler Fork
 Plugin URI: https://github.com/master5o1/wordpress-tiny-spoiler
-Description: Modified Tony Spoiler to allow bbPress 2.0 and bbPress Post Toolbar integration.
+Description: Modified Tiny Spoiler to allow bbPress 2.0 and bbPress Post Toolbar integration.
 Version: 0.3
 Author: Jason Schwarzenberger
 */
